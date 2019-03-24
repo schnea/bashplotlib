@@ -31,12 +31,14 @@ def get_scale(series, is_y=False, steps=20):
 def _plot_scatter(xs, ys, size, pch, colour, title, cs):
     plotted = set()
 
-    if title:
-        print(box_text(title, 2 * (len(get_scale(xs, False, size)) + 1)))
+    plot_str = ""
 
-    print("-" * (2 * (len(get_scale(xs, False, size)) + 2)))
+    if title:
+        plot_str += box_text(title, 2 * (len(get_scale(xs, False, size)) + 1))
+
+    plot_str += "-" * (2 * (len(get_scale(xs, False, size)) + 2))
     for y in get_scale(ys, True, size):
-        print("|", end=' ')
+        plot_str += "|"
         for x in get_scale(xs, False, size):
             point = " "
             for (i, (xp, yp)) in enumerate(zip(xs, ys)):
@@ -46,8 +48,10 @@ def _plot_scatter(xs, ys, size, pch, colour, title, cs):
                     if cs:
                         colour = cs[i]
             printcolour(point + " ", True, colour)
-        print(" |")
-    print("-" * (2 * (len(get_scale(xs, False, size)) + 2)))
+        plot_str += " |"
+
+    plot_str += "-" * (2 * (len(get_scale(xs, False, size)) + 2))
+    return plot_str
 
 def plot_scatter(f, xs, ys, size, pch, colour, title):
     """
@@ -81,7 +85,7 @@ def plot_scatter(f, xs, ys, size, pch, colour, title):
         with open(ys) as fh:
             ys = [float(str(row).strip()) for row in fh]
 
-    _plot_scatter(xs, ys, size, pch, colour, title, cs)
+    print _plot_scatter(xs, ys, size, pch, colour, title, cs)
     
 
 
