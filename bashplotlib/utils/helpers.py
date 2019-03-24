@@ -30,18 +30,30 @@ def get_colour(colour):
     """
     Get the escape code sequence for a colour
     """
-    return bcolours.get(colour, bcolours['ENDC'])
+    return bcolours.get(colour, bcolours['default'])
 
 
-def printcolour(text, sameline=False, colour=get_colour("ENDC")):
+def printcolour(text, sameline=False, colour=get_colour("default")):
     """
-    Print color text using escape codes
+    Print color text
     """
     if sameline:
         sep = ''
     else:
         sep = '\n'
-    sys.stdout.write(get_colour(colour) + text + bcolours["ENDC"] + sep)
+    sys.stdout.write(buildcolour(text, colour) + sep)
+
+
+def buildcolour(text, colour="default"):
+    """
+    Build color text using escape codes
+    """
+    # Unwise hack to avoid having to deal with colors in the
+    # tests.
+    if colour == "default":
+        return text
+    else:
+        return get_colour(colour) + text + bcolours["ENDC"]
 
 
 def drange(start, stop, step=1.0, include_stop=False):

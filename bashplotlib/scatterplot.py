@@ -9,6 +9,7 @@ from __future__ import print_function
 import csv
 import sys
 import optparse
+import os
 from .utils.helpers import *
 from .utils.commandhelp import scatter
 
@@ -28,27 +29,27 @@ def get_scale(series, is_y=False, steps=20):
     return scaled_series
 
 
-def _plot_scatter(xs, ys, size, pch, colour, title, cs):
+def build_scatter(xs, ys, size, pch, colour, title):
     plotted = set()
 
     plot_str = ""
 
     if title:
         plot_str += box_text(title, 2 * (len(get_scale(xs, False, size)) + 1))
+        plot_str += os.linesep
 
     plot_str += "-" * (2 * (len(get_scale(xs, False, size)) + 2))
+    plot_str += os.linesep
     for y in get_scale(ys, True, size):
-        plot_str += "|"
+        plot_str += "| "
         for x in get_scale(xs, False, size):
             point = " "
             for (i, (xp, yp)) in enumerate(zip(xs, ys)):
                 if xp <= x and yp >= y and (xp, yp) not in plotted:
                     point = pch
                     plotted.add((xp, yp))
-                    if cs:
-                        colour = cs[i]
-            printcolour(point + " ", True, colour)
-        plot_str += " |"
+            plot_str += buildcolour(point + " ", colour)
+        plot_str += " |" + os.linesep
 
     plot_str += "-" * (2 * (len(get_scale(xs, False, size)) + 2))
     return plot_str
@@ -66,7 +67,6 @@ def plot_scatter(f, xs, ys, size, pch, colour, title):
         colour -- colour of the points
         title -- title of the plot
     """
-    cs = None
     if f:
         if isinstance(f, str):
             with open(f) as fh:
@@ -75,8 +75,6 @@ def plot_scatter(f, xs, ys, size, pch, colour, title):
             data = [tuple(line.strip().split(',')) for line in f]
         xs = [float(i[0]) for i in data]
         ys = [float(i[1]) for i in data]
-        if len(data[0]) > 2:
-            cs = [i[2].strip() for i in data]
     elif isinstance(xs, list) and isinstance(ys, list):
         pass
     else:
@@ -85,8 +83,7 @@ def plot_scatter(f, xs, ys, size, pch, colour, title):
         with open(ys) as fh:
             ys = [float(str(row).strip()) for row in fh]
 
-    print _plot_scatter(xs, ys, size, pch, colour, title, cs)
-    
+    print(build_scatter(xs, ys, size, pch, colour, title))
 
 
 def main():
