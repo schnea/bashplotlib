@@ -34,18 +34,41 @@ def _plot_scatter(xs, ys, size, pch, colour, title, cs):
     if title:
         print(box_text(title, 2 * (len(get_scale(xs, False, size)) + 1)))
 
+    # Iterate through all points on the x- and y-scale. For each point,
+    # search through all the co-ordinates that we need to plot, and see
+    # if any of them should be plotted on the current point being considered.
     print("-" * (2 * (len(get_scale(xs, False, size)) + 2)))
     for y in get_scale(ys, True, size):
         print("|", end=' ')
         for x in get_scale(xs, False, size):
-            point = " "
+            found_point = False
             for (i, (xp, yp)) in enumerate(zip(xs, ys)):
                 if xp <= x and yp >= y and (xp, yp) not in plotted:
-                    point = pch
+                    found_point = True
                     plotted.add((xp, yp))
                     if cs:
                         colour = cs[i]
-            printcolour(point + " ", True, colour)
+
+            char_to_plot = None
+            if found_point:
+                char_to_plot = pch
+            else:
+                # The `get_scale` function always returns a scale that
+                # includes a 0.0 point, if the co-ordinates it is given cross
+                # 0 (i.e. include both negative and positive numbers).
+                #
+                # This means that we know that these conditions will trigger
+                # at some point if our co-ordinates cross 0.
+                if x == 0.0 and y == 0.0:
+                    char_to_plot = "o"
+                elif x == 0.0:
+                    char_to_plot = "|"
+                elif y == 0.0:
+                    char_to_plot = "-"
+                else:
+                    char_to_plot = " "
+
+            printcolour(char_to_plot + " ", True, colour)
         print(" |")
     print("-" * (2 * (len(get_scale(xs, False, size)) + 2)))
 
