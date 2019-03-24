@@ -80,7 +80,7 @@ def box_text(text, width, offset=0):
     """
     Return text inside an ascii textbox
     """
-    box = " " * offset + "-" * (width+2) + "\n"
+    box = " " * offset + "+" + "-" * width + "+" + "\n"
     box += " " * offset + "|" + text.center(width) + "|" + "\n"
-    box += " " * offset + "-" * (width+2)
+    box += " " * offset + "+" + "-" * width + "+"
     return box
