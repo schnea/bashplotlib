@@ -159,7 +159,7 @@ def plot_hist(f, height=20.0, bincount=None, binwidth=None, pch="o", colour="def
     nlen = max(len(str(min_y)), len(str(max_y))) + 1
 
     if title:
-        print(box_text(title, max(len(hist) * 2, len(title)), nlen))
+        print(box_text([title], max(len(hist) * 2, len(title)), nlen))
     print()
 
     used_labs = set()
@@ -202,17 +202,15 @@ def plot_hist(f, height=20.0, bincount=None, binwidth=None, pch="o", colour="def
     center += 15
 
     if showSummary:
-        print()
-        print("-" * (2 + center))
-        print("|" + "Summary".center(center) + "|")
-        print("-" * (2 + center))
-        summary = "|" + ("observations: %d" % n).center(center) + "|\n"
-        summary += "|" + ("min value: %f" % min_val).center(center) + "|\n"
-        summary += "|" + ("mean : %f" % mean).center(center) + "|\n"
-        summary += "|" + ("std dev : %f" % sd).center(center) + "|\n"
-        summary += "|" + ("max value: %f" % max_val).center(center) + "|\n"
-        summary += "-" * (2 + center)
-        print(summary)
+        summary_lines = [
+            "## Summary ##".center(center),
+            ("observations: %d" % n).center(center),
+            ("mean : %f" % mean).center(center),
+            ("std dev : %f" % sd).center(center),
+            ("max value: %f" % max_val).center(center),
+            ("min value: %f" % min_val).center(center),
+        ]
+        print(box_text(summary_lines, center))
 
 
 def main():
